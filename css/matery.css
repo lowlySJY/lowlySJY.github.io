@@ -240,9 +240,11 @@ mark {
     margin-bottom: 0;
 }
 
+/*
 .bg-color {
-    background-image: linear-gradient(to right, #4cbf30 0%, #0f9d58 100%);
-}
+    /*background-image: linear-gradient(to right, #4cbf30 0%, #0f9d58 100%);*/
+    background-image: linear-gradient(to right, #4cbf30 80%, #f0fff0 100%);
+}*/
 
 .text-color {
     color: #0f9d58 !important;
@@ -593,9 +595,11 @@ header .go-back i {
     font-weight: 400;
 }
 
+/*
 @-webkit-keyframes rainbow {
 
     0%,
+
     100% {
         background: rgba(156, 39, 176, 0.75);
         background: linear-gradient(45deg, rgba(156, 39, 176, 0.75) 0%, rgba(156, 39, 176, 0.65) 100%);
@@ -642,6 +646,7 @@ header .go-back i {
 @keyframes rainbow {
 
     0%,
+
     100% {
         background: rgba(156, 39, 176, 0.75);
         background: linear-gradient(45deg, rgba(156, 39, 176, 0.75) 0%, rgba(156, 39, 176, 0.65) 100%);
@@ -684,6 +689,7 @@ header .go-back i {
         background: -webkit-linear-gradient(135deg, rgba(2233, 30, 99, 0.75) 0%, rgba(233, 30, 99, 0.65) 100%);
     }
 }
+*/
 
 .index-card {
     margin-top: -10px;

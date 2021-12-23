@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Intro for DARTS-F</title>
+      <link href="2021/10/13/intro-for-darts-f/"/>
+      <url>2021/10/13/intro-for-darts-f/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p><em>目前，多轴机械臂已经被大规模的应用在工厂中。在车企中使用机械臂进行焊接等工作已经十分常见，但是这种焊接等工作使用固定逻辑和框架，而不能使用客户定制化以及生产制造过程中柔性化的要求。所以，本文探讨了实现机器人柔性化的基本技能，即抓取。这里主要讨论的是最常用并且控制简单的二指平行机械爪，而不涉及到多指甚至人手型机械爪。本文通过深度学习的方法（具体指卷积神经网络）来实现机器人的智能抓取，并通过基于梯度的神经网络优化方法来优化网络结构，最后通过一个数字孪生框架提高神经网络的性能。</em></p></blockquote><h1 id="0-引言"><a href="#0-引言" class="headerlink" title="0.引言"></a>0.引言</h1>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器人 </tag>
+            
+            <tag> 深度学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>本科科研经历分享</title>
       <link href="2021/03/04/ben-ke-ke-yan-jing-li-fen-xiang/"/>
       <url>2021/03/04/ben-ke-ke-yan-jing-li-fen-xiang/</url>
@@ -40,14 +67,14 @@
       
       <categories>
           
-          <category> CS </category>
+          <category> work </category>
           
       </categories>
       
       
         <tags>
             
-            <tag> Tech </tag>
+            <tag> Hexo </tag>
             
         </tags>
       

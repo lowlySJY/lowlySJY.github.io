@@ -351,7 +351,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-01-11
+                    2022-01-13
                 </div>
                 
 
@@ -399,20 +399,20 @@
 <p>我们的优化算法流程如图（3）所示（参考了<a target="_blank" rel="noopener" href="https://github.com/quark0/darts">DARTS</a>），图3中圆圈表示节点，与神经网络训练中的feature map概念相同。连接各个圆圈的是有向箭头表示不同的操作，操作就是卷积层，或者池化层，更细分的话是指卷积核尺寸为3×3的卷积层（图3中紫色的模型），卷积核尺寸为5×5的卷积核层（图3中橙色的模型），第一层卷积核尺寸3×3，第二层卷积核尺寸3×3（图3中紫色和绿色的模型）。所以优化算法的流程就是每个节点之间有很多不同的操作，然后通过优化算法找出各个节点之间最佳的操作，然后组成一个新的网络。</p>
 <p>将离散的网络结构转化成连续的优化算法则是通过在不同的操作添加一个变量，来表示该操作对结果的影响。这个变量通过softmax可以转化为不同操作在计算中的占比。通俗来讲，就是给节点之间的每个操作都赋予一个概率系数 $$\alpha$$，这个系数表示了这个操作的计算结果在最终结果中占比是20%，还是50%。由于最终的损失函数值是不断变小的，因此，我们可以认为在计算过程中占比最多，概率系数最大的操作就是最合适的操作。然后将合适的操作提取出来，删除多余的操作，可以得到最终的离散网络，这个离散的网络性能会比连续下包含所有操作的网络性能更好，并且占用更少的计算。</p>
 <p>下节将介绍优化算法的数学细节。</p>
-<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220111002634.jpg"></p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220111002634.jpg" alt="Fig3"></p>
 <h2 id="2-2-可微分式优化算法"><a href="#2-2-可微分式优化算法" class="headerlink" title="2.2 可微分式优化算法"></a>2.2 可微分式优化算法</h2><p>在定义搜索空间之后，需要确定具体的计算方式。参考<a target="_blank" rel="noopener" href="https://github.com/quark0/darts">DARTS</a>提出的双层优化函数，他们将操作中的权重系数 $$(\omega)$$ 训练作为内层函数，将优化操作概率系数 $$(\alpha)$$ 作为外层函数。优化的迭代过程就是根据上一次迭代确定的权重系数更新操作系数，然后根据优化后的操作系数重新更新权重系数。如公式（2）和公式（3）所示，公式（2）是外层函数，公式（3）是内层函数。</p>
-<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220110232405.png" alt="Fig3"></p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220110232405.png"></p>
 <p>完全求解公式（3）意味着要讲包含所有可能操作的巨大神经网络训练到完全收敛，这一过程会耗费大量的时间，因此，DARTS的作者们提出了只更新一次内层函数然后在更新外层函数。他们不将操作中的权重系数完全收敛，然后通过只更新一次操作中的权重，如公式（5）所示，这样会大大减少计算所需要的时间，从而达到快速的优化的目的。这一策略在操作更多，节点数目更多的时候有着十分明显的效果（设想当一个有12种操作，有50个节点的网络，相当于约有600个卷积层）。</p>
-<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220110232901.png" alt="Fig4"></p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220110232901.png"></p>
 <p>但是这种策略一个主要的问题就是只更新一次内层函数的梯度，会造成在更新外层函数时梯度方向不明显，从而使得优化算法收敛时间变长，并且优化算法容易在错误的方向上达到局部最优解。而在工业上对响应时间会有很高要求，因此，实际应用在工业上不需要特别大特别深的卷积神经网络。而在这类小网络上，可以将内层函数多迭代几次直到近似收敛，然后再去更新外层函数，这样虽然牺牲了部分优化的计算速度，但是可以为外层优化神经网络结构的函数提供更明确的方向。我们的实验证明了在6个操作和3个节点上，6个操作和8个节点上都获得了更高的精度。</p>
 <p>另外，为了在优化过程中考虑神经网络大小对计算速度的影响，我们在损失函数中引入了惩罚项，如公式（12）所示。该惩罚项中$$F(o_{kl})$$表示对$$o_{kl}$$操作计算其所需的浮点计算数（FLOPs）。整个惩罚项就是根据优化得到的概率系数$$\alpha$$得到最适合操作的FLOPs为整个损失函数增加一个值，这个值与FLOPs的大小成正比，因此优化算法在优化时，为了让损失函数最小，会平衡MSE与惩罚项，因而达到优化的网络结构同时考虑了精度和速度。</p>
 <p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220110235444.png"></p>
 <p>最终我们实现了一个兼顾精度和速度的CNN结构优化算法，整个算法流程的伪代码如图（3）所示。下节将介绍一个数字孪生框架，来进一步的提高网络的性能，并通过仿真来减少实验所需的成本。</p>
-<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220111000820.png" alt="Fig3"></p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220111000820.png"></p>
 <h2 id="2-3-数字孪生框架"><a href="#2-3-数字孪生框架" class="headerlink" title="2.3 数字孪生框架"></a>2.3 数字孪生框架</h2><p>数字孪生是一个很大的概念，可以理解为工业生产中通过仿真结合实际数据来实时的更新产品的情况。这一技术十分重要，因为在现代的生产中产品的状态是很难通过其他办法去判断的，如果要停机检查则需要大量时间，并且不能立刻找到问题进行维护，所以需要通过数字孪生来构建产品的孪生体，随着产品的使用跟着实际的使用情况发生改变。其中涉及到很多细节，这里说数字孪生并不是完整的，而只是实现了其中一个小部分。</p>
 <p>图（4）是用于机器人抓取的数字孪生框架示意图，我们将在康奈尔数据集上训练好的模型放到仿真平台中，然后通过计算仿真平台内得到的图像来计算预测的抓取姿态，然后在现实实验系统的数字孪生体中逐个进行测试，然后将成功抓取的矩形框记录下来，在康奈尔数据集训练的基础上重新训练，最终得到经过数字孪生框架提高的网络模型，将这个最终的模型应用到实际的实验系统来做最终的测试。图中中心位置红色的透明模型表示是优化结构后得到的网络模型（已经训练好权重系数）。图中左边是仿真平台，右边是实际的实验平台。</p>
 <p>这两个实验记录在这个<a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=qOtc4UtcUqE">视频</a>下。</p>
-<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220111002531.jpg"></p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220111002531.jpg" alt="Fig4"></p>
 
                 
             </div>

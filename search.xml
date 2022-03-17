@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Notes for Deep Reinforcement Learning</title>
+      <link href="2022/03/17/notes-for-deep-reinforcement-learning/"/>
+      <url>2022/03/17/notes-for-deep-reinforcement-learning/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>DL has a powerful data representation ability but it is not enough to build a smart AI system. This is because an AI system should not only able to learn from the provided data but also able to learn from interactions with the real world environment like a human. </p><p>RL is a subset of ML that enables computers to learn by interacting with the real world environment. In brief, RL separates the real world into two components—an environment and an agent. The agent interacts with the environment by performing specific actions and receives feedback from the environment. The feedback is usually termed as the “reward” in RL. The agent learns to perform “better” by trying to get more positive rewards from the environment. This learning process forms a feedback loop between the environment and agent, guiding the improvement of the agent with RL algorithms.</p><p>DRL is to combine the advantages of DL and RL for building AI systems. The main reason to use DL in RL is to leverage the scalability of DNN in high-dimensional space.</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 科研 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 机器人 </tag>
+            
+            <tag> 深度学习 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>缺陷检测</title>
       <link href="2021/12/23/que-xian-jian-ce/"/>
       <url>2021/12/23/que-xian-jian-ce/</url>

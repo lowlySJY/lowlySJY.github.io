@@ -323,6 +323,10 @@
                                 <span class="chip bg-color">深度学习</span>
                             </a>
                         
+                            <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">强化学习</span>
+                            </a>
+                        
                     </div>
                     
                 </div>
@@ -351,7 +355,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-03-22
+                    2022-03-23
                 </div>
                 
 
@@ -392,8 +396,19 @@
 <li>We will often have to consider the worst case rather than the average case because we do not want things to go out of control in the learning stage</li>
 <li>The learning objective can be different as online learning often tries to minimize regret whereas statistical learning tries to minimize empirical risk.</li>
 </ul>
-<p>The regret after n steps is defined as:<br>$$<br>R E_n = \left({\underset{j=1,2,…,K} {max}} {\sum_{t=1}^n}R_t^j\right)-{\sum_{t=1}^n}R_t^i<br>$$<br>The first term in the subtraction is the total reward that we accumulate until time <em>n</em> for always receiving the maximized rewards and the second term is the actual accumulated rewards in a trial that has gone through <em>n</em> time steps. In order to select the best action, we should try to minimize the expected regret because of the stochasticity introduced by our actions and rewards. We will differentiate two different types of regret, the expected regret and pseudo-regret (伪后悔值). The expected regret is defined as:<br>$$<br>E[RE_n] = E\left[({\underset{j=1,2,…,K} {max}} {\sum_{t=1}^n}R_t^j)-{\sum_{t=1}^n}R_t^i\right]<br>$$<br>The pseudo-regret is defined as:<br>$$<br>\overline {R E_n} = {\underset{j=1,2,…,K} {max}} E\left[ {\sum_{t=1}^n}R_t^j-{\sum_{t=1}^n}R_t^i \right]<br>$$<br>The expected regret is harder to compute. This is because for the pseudo-regret we only need to find the action that optimizes the regret in expectation, however, for the expected regret, we will have to find the expected  regret that is optimal over actions across different trials. Concretely, we have $$E[REn] ≥ \overline{REn}$$.</p>
-
+<p>The regret after n steps is defined as:<br>$$<br>R E_n = \left({\underset{j=1,2,…,K} {max}} {\sum_{t=1}^n}R_t^j\right)-{\sum_{t=1}^n}R_t^i<br>$$<br>The first term in the subtraction is the total reward that we accumulate until time <em>n</em> for always receiving the maximized rewards and the second term is the actual accumulated rewards in a trial that has gone through <em>n</em> time steps. In order to select the best action, we should try to minimize the expected regret because of the stochasticity introduced by our actions and rewards. We will differentiate two different types of regret, the expected regret and pseudo-regret (伪后悔值). The expected regret is defined as:<br>$$<br>\Bbb{E}[RE_n] = \Bbb{E}\left[({\underset{j=1,2,…,K} {max}} {\sum_{t=1}^n}R_t^j)-{\sum_{t=1}^n}R_t^i\right]<br>$$<br>The pseudo-regret is defined as:<br>$$<br>\overline {R E_n} = {\underset{j=1,2,…,K} {max}} \Bbb{E}\left[ {\sum_{t=1}^n}R_t^j-{\sum_{t=1}^n}R_t^i \right]<br>$$<br>The expected regret is harder to compute. This is because for the pseudo-regret we only need to find the action that optimizes the regret in expectation, however, for the expected regret, we will have to find the expected  regret that is optimal over actions across different trials. Concretely, we have $$\Bbb{E}[REn] ≥ \overline{REn}$$.</p>
+<p>Stochastic MAB’s (Multi-Armed Bandit) reward functions are determined by the probabilistic distributions that are usually not changed. In reality, this might not be the case. Adversarial MAB modeling is needed when the rewards are no longer governed by a stationary probabilistic distributions but arbitrarily determined by some <strong>adversary</strong> (对抗者).</p>
+<p>The general setup for adversarial MAB: At each time step, the agent will choose an arm <em>I<del>t</del></em> to pull and the adversary will decide the reward vector <em>R<del>t</del></em> for this time step. </p>
+<p>We will call the adversary who sets the rewards independent of the past history an <strong>oblivious adversary</strong> (健忘对抗者) and the one that sets the rewards based on the past history a non-<strong>oblivious adversary</strong> (非健忘对抗者). We call the game in which a player has full knowledge of the reward vector a <strong>full-information game</strong> (全信息博弈) and the game with the knowledge of the reward for the action being played a <strong>partial-information game</strong> (部分信息博弈).</p>
+<p>When the reward function for the task is stationary, we only need to find the best action, otherwise, when the task is non-stationary we will try to keep track of the changes.</p>
+<h3 id="Markov-Decision-Process"><a href="#Markov-Decision-Process" class="headerlink" title="Markov Decision Process"></a>Markov Decision Process</h3><h4 id="Markov-Process-MP"><a href="#Markov-Process-MP" class="headerlink" title="Markov Process (MP)"></a>Markov Process (MP)</h4><p> A Markov process (MP) is a discrete stochastic process with Markov property, which simplifies the simulation of the world in continuous space. Figure 2.4 shows an example of MP. Each circle represents a state and each edge represents a state transition (状态转移)</p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220323163708.bmp" alt="Figure2.4"></p>
+<p>In <strong>probabilistic graphical models</strong> (概率图模型) , specifically the ones that we use in this book, a circle indicates a variable, and the arrow with a single direction indicates the relationship between two variables.  For example, “a → b” indicates that variable b is dependent on variable a. The variable in a circle in white denotes a normal variable, while the variable in a circle with a shade of gray denotes an observed variable. A solid black square with variables inside indicates those variables are iterative</p>
+<p>MP follows the assumption of <strong>Markov chain</strong> where the next state <em>S<del>t+1</del></em> is only dependent on the current state <em>S<del>t</del></em> , with the probability of a state jumping to the next state described as follows:<br>$$<br>p(S_{t+1}|S_t) = p(S_{t+1}|S_0, S_1, S_2,…, S_t)<br>$$<br>We also frequently use <em>s’</em> to represent the next state, in which the probability that state <em>s</em> at time <em>t</em> will lead to state <em>s’</em> at time <em>t + 1</em> is as following in a <strong>time-homogeneous</strong> Markov chain (时间同质马尔可夫链):<br>$$<br>p(s’|s) = p(S_{t+1}=s’|S_t=s)=p(S_{t+2}=s’|S_{t+1}=s)<br>$$<br><em>The time-homogeneous property is a basic assumption for most of the derivations in the book</em>, and we will not mention it but follow it as default in most cases. However, in practice, the time-homogeneous may not always hold, especially for non-stationary environments, multi-agent reinforcement learning, etc., which concerns with time-inhomogeneous/non-homogeneous cases.</p>
+<p>Given a finite <strong>state set</strong> <em>S</em>, we can have a <strong>state transition matrix</strong> <em>P</em>. The <em>P</em> for Fig. 2.4 is as follows:</p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220323170109.bmp" alt="P"></p>
+<p>where <em>P<del>i,j</del></em> represents the probability of transferring the current state <em>S<del>i</del></em> to the next state <em>S<del>j</del></em> . The sum of each row is equal to 1 and the <em>P</em> is always a square matrix. These probabilities indicate the whole process is stochastic. Markov process can be represented by a tuple of &lt; *S,P* &gt;. Mathematically, the next state is sampled from P as follows:<br>$$<br>S_{t+1} \sim \bf{P}_{S_t}<br>$$</p>
+<h4 id="Markov-Reward-Process"><a href="#Markov-Reward-Process" class="headerlink" title="Markov Reward Process"></a>Markov Reward Process</h4>
                 
             </div>
             <hr/>
@@ -463,6 +478,10 @@
                             
                                 <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
                                     <span class="chip bg-color">深度学习</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">强化学习</span>
                                 </a>
                             
                         </div>
@@ -552,6 +571,10 @@
                     
                     <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
                         <span class="chip bg-color">深度学习</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">强化学习</span>
                     </a>
                     
                 </div>
@@ -645,6 +668,13 @@
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
 
 

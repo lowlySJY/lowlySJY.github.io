@@ -303,10 +303,104 @@
 
 
 
-<main class="container content">
+<main class="post-container content">
 
     
-    <!-- 文章内容详情 -->
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
 <div id="artDetail">
     <div class="card">
         <div class="card-content article-info">
@@ -355,7 +449,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-03-23
+                    2022-03-28
                 </div>
                 
 
@@ -408,7 +502,24 @@
 <p>Given a finite <strong>state set</strong> <em>S</em>, we can have a <strong>state transition matrix</strong> <em>P</em>. The <em>P</em> for Fig. 2.4 is as follows:</p>
 <p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220323170109.bmp" alt="P"></p>
 <p>where <em>P<del>i,j</del></em> represents the probability of transferring the current state <em>S<del>i</del></em> to the next state <em>S<del>j</del></em> . The sum of each row is equal to 1 and the <em>P</em> is always a square matrix. These probabilities indicate the whole process is stochastic. Markov process can be represented by a tuple of &lt; *S,P* &gt;. Mathematically, the next state is sampled from P as follows:<br>$$<br>S_{t+1} \sim \bf{P}_{S_t}<br>$$</p>
-<h4 id="Markov-Reward-Process"><a href="#Markov-Reward-Process" class="headerlink" title="Markov Reward Process"></a>Markov Reward Process</h4>
+<h4 id="Markov-Reward-Process"><a href="#Markov-Reward-Process" class="headerlink" title="Markov Reward Process"></a>Markov Reward Process</h4><p><strong>Markov reward process</strong> (MRP) extends MP from &lt; *S,P* &gt; to &lt; *S,P, R, γ* &gt;. The R and γ represent the reward function and reward discount factor, respectively. The Fig. 2.6 and Fig. 2.7 show that the reward function depends on the current state in MRP:<br>$$<br>R_t = R(S_t)<br>$$<br> Given a list of immediate reward r for each time step in a single trajectory τ , a return is the cumulative reward of a trajectory:<br>$$<br>G_{t=0:T}=R(\tau)=\sum_{t=0}^T R_t<br>$$<br>where <em>R<del>t</del></em> is the immediate reward at time step <em>t</em>, and <em>T</em> represents the time step of the terminal state, or the total number of steps in a finite episode. For example, the trajectory (g, t<del>1</del>, t<del>2</del>, p, b) has an <strong>undiscounted return</strong> (非折扣化的回报) of 5 = −1 − 2 − 2 + 10.</p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220324131804.bmp" alt="Fig2.6&amp;2.7"></p>
+<p>Often, the steps that are closer have a greater impact than the distant ones. We introduce the concept of <strong>discounted return</strong> (折扣化回报). The discounted return is a weighted sum of rewards which gives more weights to the closer time steps. We define the discounted return as follows:<br>$$<br>G_{t=0:T}=R(\tau)=\sum_{t=0}^T \gamma^tR_t<br>$$<br>where a reward discount factor γ ∈ [0, 1] is used to reduce the weights as the time step increases. . For example in Fig. 2.6, given γ = 0.9, the trajectory (g, t<del>1</del>, t<del>2</del>, p, b) has a return of 2.87 = −1 − 2 × 0.9 − 2 × 0.9^2 + 10 × 0.9^3</p>
+<p>The <strong>value function</strong> (价值函数) <em>V (s)</em> represents the <strong>expected return (期望回报) from the state</strong> <em>s</em>.  If the agent acts according to the policy <em>π</em>, we denote the value function as <em>$$V^{π}(s)$$</em>:<br>$$<br>V^\pi(s)=\Bbb{E}_{\tau \sim \pi}[R{(\tau)}|S_0=s]<br>$$<br>A simple way to estimate the <em>V(s)</em> is <strong>Monte Carlo method</strong> (蒙特卡罗法), we can randomly sample a large number of trajectories starting from state s according to the given state transition matrix <em>P</em>. Take Fig. 2.6 as an example, given γ = 0.9 and P, to estimate <em>$$V^{π}(s=t_2)$$</em>,  we can randomly sample four trajectories as follows and compute the returns of all trajectories individually:<br>$$<br>s=(t_2,b),R=-2+0<em>0.9=-2\<br>s=(t_2,p,b),R=-2+10</em>0.9+0<em>0.9^2=7\<br>s=(t_2,r,t_2,p,b),R=-2+1</em>0.9-20.9^2+10<em>0.9^3+0=4.57\<br>s=(t_2,r,t_1,t_2,b),R=-2+0.9-2</em>0.9^2-2*0.9^3+0=-0.178<br>$$<br>Given the returns of all trajectories, the estimated expected return under state <em>s = t<del>2</del></em> is <em>V(s = t<del>2</del>)</em> = (−2 + 7 + 4.57 − 0.178)/4 = 2.348</p>
+<h4 id="Markov-Decision-Process-MDP"><a href="#Markov-Decision-Process-MDP" class="headerlink" title="Markov Decision Process (MDP)"></a>Markov Decision Process (MDP)</h4><p>To model the process of sequential decision making, MDP is better than MR and MRP.  As Fig. 2.9 shows, different from MRP that the immediate rewards are conditioned on the state only (reward values on nodes), the immediate rewards of MDP are associated with the action and state (reward values on edges).</p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220324141411.bmp" alt="Fig. 2.9"></p>
+<p>Given an action under a state, the next state is not fixed. For example, if the agent acts “rest” under state <em>s = t<del>2</del></em>, the next state can be either <em>s = t<del>1</del></em> or <em>t<del>2</del></em>. As mentioned above, MP can be defined as the tuple &lt; *S,P* &gt;, and MRP is defined as the tuple &lt; *S,P, R, γ* &gt;, where the element of state transition matrix is $$P_{s,s’} = p(s’ |s)$$. Here, MDP is defined as a tuple of &lt; *S, A,P, R, γ* &gt;. The element of state transition matrix becomes and Fig. 2.10 shows the graphical model of MDP in a probabilistic inference view.:<br>$$<br>p(s’|s,a) = p(S_{t+1}=s’|S_t=s,A_t=a)<br>$$<br><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220324144200.bmp" alt="Fig. 2.10"></p>
+<p>For instance, most of the edges in Fig. 2.9 have a state transition probability of one, e.g., $$p(s’ = t_2|s = t_1, a = work) = 1$$, except that $$p(s’ |s = t_2, a = rest) = [0.2, 0.8]$$ which means if the agent performs action <em>a = rest</em> at state <em>s = t<del>2</del></em>, it has 0.2 probability will transit to state <em>s’ = t<del>1</del></em> , and 0.8 probability will keep the current state.</p>
+<p>A <strong>policy</strong> <em>π</em> represents the way in which the agent behaves based on its observations of the environment. Specifically, the policy is a mapping from the each state s ∈ S and action a ∈ A to the probability distribution π(a|s) for taking action a in state s, where the distribution is:<br>$$<br>\pi(a|s)=p(A_t=a|S_t=s),\exist t<br>$$<br><strong>Expected return</strong> is the expectation of returns over all possible trajectories under a policy. Therefore, <strong>the goal of reinforcement learning is to find the higher expected return by optimizing the policy</strong>. Mathematically, given the start-state distribution <em>ρ<del>0</del></em> and the policy π, the probability of a T-step trajectory for MDP is:<br>$$<br>p(\tau|\pi)=\rho_0(S_0)\prod_{t=0}^{T-1}p(S_{t+1}|S_t,A_t)\pi(A_t|S_t)<br>$$<br>Given the reward function R and all possible trajectorites <em>τ</em>, the <strong>expected return</strong> J(π) is defined as follows:<br>$$<br>J(\pi)=\int_\tau p(\tau|\pi)R(\tau)=\Bbb{E}<em>{\tau\sim\pi}[R(\tau)]<br>$$<br>where <em>p</em> here means that the trajectory with higher probability will have a higher weight to the expected return. The <strong>RL optimization problem</strong> is to improve the policy for maximizing the expected return with optimization methods. The <strong>optimal policy</strong> π∗ can be expressed as:<br>$$<br>\pi^*=arg\max_\pi J(\pi)<br>$$<br>Given policy π, the <strong>value function</strong> <em>V(s)</em>, the expected return under the state, can be defined as:<br>$$<br>V^\pi(s)=\Bbb{E}</em>{\tau\sim\pi}[R(\tau)|S_0=s]\<br>        =\Bbb{E}<em>{A_t\sim\pi(\cdot|S_t)}\left[\sum</em>{t=0}^\infty\gamma^tR(S_t,A_t)|S_0=s\right]<br>$$<br>where τ ∼ π means the trajectories τ are sampled given the policy π, At ∼ π(·|St) means the action under a state is sampled from the policy, the next state is determined by the state transition matrix <strong>P</strong> given state s and action a.</p>
+<p>In MDP, given an action, we have the <strong>action-value function</strong>, which depends on both the state and the action just taken. It gives an expected return under a state and an action. If the agent acts according to a policy π, we denote it as $$Q^π (s, a)$$, which is defined as:<br>$$<br>Q^\pi(s,a)=\Bbb{E}<em>{\tau\sim\pi}[R(\tau)|S_0=s,A_0=a]\<br>        =\Bbb{E}</em>{A_t\sim\pi(\cdot|S_t)}\left[\sum_{t=0}^\infty\gamma^tR(S_t,A_t)|S_0=s,A_0=a\right]<br>$$<br>We need to keep in mind that the $$Q^π (s, a)$$ depends on π, as the estimation of the value is an expectation over the trajectories by the policy π. This also indicates if the π changes, the corresponding $$Q^π (s, a)$$ will also change accordingly. We therefore usually call the value function estimated with a specific policy the <strong>on-policy value function</strong> (在线价值函数), for the distinction from the optimal value function estimated with the <strong>optimal policy</strong> (最优价值函数). We can observe the relation between vπ (s) and qπ (s, a):<br>$$<br>q_\pi(s,a)=\Bbb{E}<em>{\tau\sim\pi}[R(\tau)|S_0=s,A_0=a]\<br>\nu_\pi(s)=\Bbb{E}</em>{a\sim\pi}[q_\pi(s,a)]<br>$$<br>There are two simple ways to compute the value function $$v_π (s)$$ and action-value function $$q_π (s, a)$$: The first is the <strong>exhaustive method</strong> follows Eq. (40), it first computes the probabilities of all possible trajectories that start from a state, and then follows Eqs. (41) and (42) to compute the $$V ^π (s)$$ and $$Q^π (s, a)$$ for this state. However, in practice, the number of possible trajectories would be large and even infinite. Instead of using all possible trajectories, we can use <strong>Monte Carlo method</strong> as described in the previous MRP section to estimate the $$V^π (s)$$ by randomly sampling a large number of trajectories.</p>
+<h4 id="Bellman-Equation-and-Optimality"><a href="#Bellman-Equation-and-Optimality" class="headerlink" title="Bellman Equation and Optimality"></a>Bellman Equation and Optimality</h4><p>The Bellman equation, also known as the Bellman expectation equation, is used to compute the expectation of value function given policy π, over the sampled trajectories guided by the policy. We call this <strong>“on-policy”</strong> manner as in reinforcement learning the policy is usually changing, and the value function is conditioned on or estimated by current policy</p>
+<p>We can derive the Bellman equation for <strong>on-policy state-value function</strong> (在线状态价值函数) for MDP process in a recursive relationship:<br>$$<br>\nu_\pi(s)=\Bbb{E}<em>{a\sim\pi(\cdot|s),s’\sim p(\cdot|s,a)}[R(\tau_t:T)|S_t=s]\<br>=\Bbb{E}</em>{a\sim\pi(\cdot|s),s’\sim p(\cdot|s,a)}[R_t + \gamma R(\tau_{t+1}:T)|S_t=s]\<br>=\Bbb{E}<em>{a\sim\pi(\cdot|s),s’\sim p(\cdot|s,a)}[r+\gamma\nu_\pi(s’)]<br>$$<br>the Bellman equation for MRP can be derived by simply removing the action from it:<br>$$<br>\nu(s)=\Bbb{E}</em>{s’\sim p(\cdot|s,a)}[r+\gamma\nu_(s’)]<br>$$<br>Bellman equation for **on-policy action-value function **(在线动作价值函数):<br>$$<br>q_\pi(s,a)=\Bbb{E}<em>{a\sim\pi(\cdot|s),s’\sim p(\cdot|s,a)}[R(\tau_t:T)|S_t=s,A_t=a]\<br>=\Bbb{E}</em>{a\sim\pi(\cdot|s),s’\sim p(\cdot|s,a)}[R_t+\gamma(R_{t+1}+\gamma R_{t+2}+\dots+\gamma^{T-1}R_T)|S_t=s,A_t=a]\<br>=\Bbb{E}<em>{S</em>{t+1}\sim\sim p(\cdot|S_{t},A_{t})}[R_{t}+\gamma \Bbb{E}<em>{a\sim\pi(\cdot|s),s’\sim p(\cdot|s,a)}[R(\tau</em>{t+1}:T)]|S_t=s]\<br>=\Bbb{E}<em>{S</em>{t+1}\sim\sim p(\cdot|S_{t},A_{t})}[R_{t}+\gamma \Bbb{E}<em>{A</em>{t+1}\sim\pi(\cdot|S_{t+1})}[q_\pi (S_{t+1},A_{t+1})]|S_t=s]\<br>=\Bbb{E}<em>{s’\sim p(\cdot|s,a)}[R(s,a)+\gamma \Bbb{E}</em>{a’\sim(\pi(\cdot|s’)}[q_\pi(s’,a’)]<br>$$<br>The above derivation is based on the finite MDP with maximal length of T , however, these formulas still hold when in the infinite MDP, simply with T replaced by “∞”. The two Bellman equations also do not depend on the formats of policy, which means they work for both stochastic policies π(·|s) and deterministic policies π(s).</p>
+<p>The Bellman equation for MRP as in Eq. (47) can be solved directly if the transition function/matrix is known, which is called the <strong>inverse matrix method</strong> (逆矩阵方法). We rewrite Eq. (47) in a vector form for cases with discrete and finite state space as:<br>$$<br>\vec{\nu}=\vec{r}+\gamma\vec{P}\vec{\nu}<br>$$<br>where <strong>v</strong> and <strong>r</strong> are vectors with their elements <em>v(s)</em> and <em>R(s)</em> for all s ∈ S, and <strong>P</strong> is the transition probability matrix with elements p(s‘|s) for all s, s’ ∈ S. then<br>$$<br>\vec{\nu}=(I-\gamma\vec{P})^{-1} \vec{r}<br>$$<br>the complexity of the solution is O(n^3), where n is the number of states. Therefore this method does not work for a large number of states, meaning it may not be feasible for large-scale or continuous-valued problems. </p>
+<p>Since on-policy value functions are estimated with respect to the policy itself, different policies will lead to different value functions, even for the same set of states and actions. Among all those different value functions, we define the optimal value function as:<br>$$<br>\nu_*(s)=\max_\pi \nu_\pi(s),\forall s\in S<br>$$<br>which is actually the optimal state-value function. We also have the optimal action-value function as:<br>$$<br>q_*(s,a)=\max_\pi q_\pi(s,a),\forall s \in S, a \in A<br>$$<br>And they have the relationship:<br>$$<br>q_*(s,a)=\Bbb{E}\left[R(s,a)+\gamma\max_\pi\Bbb{E}\left[q_\pi(s’,a’)\right]\right]\<br>=\Bbb{E}\left[R(s,a)+\gamma\max_\pi\nu_\pi(s’)\right]\<br>=\Bbb{E}[R_t+\gamma\nu_*(S_{t+1})|S_t=s,A_t=a]<br>$$<br>Another relationship between the two is:<br>$$<br>\nu_*(s)=\max_{a\sim A}q_*(s,a)<br>$$<br>we can apply the Bellman equation on the pre-defined optimal value functions, which gives us the <strong>Bellman optimality equation</strong> (贝尔曼最优方程) , or called Bellman equation for optimal value functions, as follows.<br>$$<br>\nu_*(s)=\max_a\Bbb{E}<em>{s’\sim p(\cdot|s,a)}[R(s,a)+\gamma\nu</em><em>(s’)]<br>$$<br>Bellman equation for optimal action-value function is:<br>$$<br>q_</em>(s,a)=\Bbb{E}<em>{s’\sim p(\cdot|s,a)}[R(s,a)+\gamma \max</em>{a’}[q_*(s’,a’)]<br>$$<br> A policy with action sampled from the probability distribution is actually called the <strong>stochastic policy distribution</strong> (随机性策略分布) , with the action:<br>$$<br>a=\pi(\cdot|s)<br>$$<br>However, if we reduce the variance of the probability distribution of a stochastic policy and narrow down its range to the limit, we will get a Dirac delta function (δ function) as a distribution, which is the **deterministic policy **(确定性策略)  π(s). <strong>Deterministic policy π(s) also means given a state there is only one unique action as follows:</strong><br>$$<br>a\sim\pi(s)<br>$$<br>Note that the deterministic policy is no longer a mapping from a state and action to the conditional probability distribution, but rather a mapping from a state to an action directly. This slight difference will lead to some different derivations in the policy gradient method introduced in later sections.</p>
+<p>As mentioned in previous sections, when the state in reinforcement learning environment is not fully represented by the observation for the agent, the environment is partially observable. For a Markov decision process, it is called the partially observed Markov decision process (POMDP), which forms a challenge for improving the policy without complete information of the environment states.</p>
+<p>Summary of Terminology in Reinforcement Learning:</p>
+<p><img src="https://raw.githubusercontent.com/lowlySJY/imagesforblog/main/img/20220328200329.bmp"></p>
+
                 
             </div>
             <hr/>
@@ -663,6 +774,100 @@
 
 <script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
 
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
 
     
 
